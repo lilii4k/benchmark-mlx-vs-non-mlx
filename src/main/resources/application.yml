@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: llm-benchmark-agent
+  ai:
+    openai:
+      api-key: lm-studio
+      base-url: http://localhost:1234/v1
+    ollama:
+      base-url: http://localhost:11434
+
+embabel:
+  agent:
+    mode: shell
+    scan-packages:
+      - com.embabel.benchmark
+  models:
+    default-llm: qwen3-4b-instruct-2507-mlx
+
+benchmark:
+  default-prompt:
+    - "Explain quantum computing in simple terms."
+
+  iterations: 10
+
+  timeout-seconds: 120
+
+  mlx-model: qwen3-4b-instruct-2507-mlx
+  ollama-model: hopephoto/Qwen3-4B-Instruct-2507_q8:latest
+
+# Logging
+#logging:
+#  level:
+#    com.embabel: DEBUG
+#    com.embabel.benchmark: DEBUG
+#    org.springframework.ai: DEBUG
+#    org.springframework.web.client: DEBUG
+#    root: INFO

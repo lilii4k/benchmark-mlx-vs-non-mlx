@@ -1,0 +1,21 @@
+{
+  "groups": [
+    {
+      "name": "spring.ai.ollama",
+      "type": "com.embabel.agent.config.models.ollama.OllamaNodeProperties",
+      "sourceType": "com.embabel.agent.config.models.ollama.OllamaNodeProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.ai.ollama.nodes",
+      "type": "java.util.List<com.embabel.agent.config.models.ollama.OllamaNodeConfig>",
+      "description": "List of Ollama nodes for explicit multi-instance access. When empty, library uses only the default base-url configuration.",
+      "sourceType": "com.embabel.agent.config.models.ollama.OllamaNodeProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}
