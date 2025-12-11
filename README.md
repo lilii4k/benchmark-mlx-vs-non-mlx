@@ -201,7 +201,7 @@ llm-benchmark-agent/
 ├── src/main/
 │   ├── kotlin/com/embabel/benchmark/
 │   │   ├── BenchmarkApplication.kt      # Spring Boot entry point
-│   │   ├── BenchmarkAgent.kt            # Agent with 4 @Action methods
+│   │   ├── BenchmarkAgent.kt            # Agent with 2 @Action methods
 │   │   ├── config/
 │   │   │   └── BenchmarkProperties.kt   # Configuration properties
 │   │   └── model/
@@ -242,17 +242,18 @@ The agent tracks for each iteration and calculates averages:
 
 **Add a new model provider:**
 1. Configure provider in `application.yml`
-2. Add new test action in `BenchmarkAgent.kt`
-3. Update `ModelType` enum in `BenchmarkResults.kt`
+2. Update the `runCompleteBenchmark` action to test the new provider
+3. Update `AggregatedBenchmarkResult` to track additional models
 
 **Add custom metrics:**
-1. Extend `TestResult` data class with new fields
-2. Calculate metrics in test actions
-3. Update `compareResults()` to include new metrics
+1. Extend `IterationData` data class with new fields
+2. Calculate metrics in `runCompleteBenchmark` loop
+3. Update `printFinalSummary()` to display new metrics
 
 **Change output format:**
-1. Modify `compareResults()` to output JSON, CSV, or HTML
-2. Use Spring profiles for format selection
+1. Modify `printFinalSummary()` to output JSON, CSV, or HTML
+2. Or return `AggregatedBenchmarkResult` for programmatic access
+3. Use Spring profiles for format selection
 
 ## Troubleshooting
 
