@@ -42,11 +42,14 @@ Q7:Does the vendor’s 18% payload increase claim seem credible or risky in cont
 Q8:Summarize the feasibility of NADN in exactly three sentences, each addressing: technical viability, economic justification, policy/safety concerns.(Be strict: no more than three sentences.)
     """.trimIndent()
 
+//    If no models / iteration number is provided in config, it will default to these:
     var mlxModel: String = "qwen3-4b-instruct-2507-mlx"
 
     var ollamaModel: String = "hopephoto/Qwen3-4B-Instruct-2507_q8:latest"
 
-    var iterations: Int = 3
+    var judgeModel: String = "openai/gpt-oss-20b"
+
+    var iterations: Int = 100
 }
 
 

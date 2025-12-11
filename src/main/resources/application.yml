@@ -20,12 +20,13 @@ benchmark:
   default-prompt:
     - "Explain quantum computing in simple terms."
 
-  iterations: 10
+  iterations: 100
 
   timeout-seconds: 120
 
   mlx-model: qwen3-4b-instruct-2507-mlx
   ollama-model: hopephoto/Qwen3-4B-Instruct-2507_q8:latest
+  judge-model: openai/gpt-oss-20b
 
 # Logging
 #logging:
