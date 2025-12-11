@@ -72,56 +72,94 @@ The benchmark agent follows this autonomous workflow:
    - Initializes test configuration
    - Sets up prompts and model parameters
 
-2. **Test MLX Model** (`testMlxModel`)
-   - Runs the configured number of iterations on LM Studio
-   - Measures total execution time across all iterations
-   - Calculates average time per iteration and tokens per second
-
-3. **Test Ollama Model** (`testOllamaModel`)
-   - Runs the configured number of iterations on Ollama
-   - Measures total execution time across all iterations
-   - Calculates average time per iteration and tokens per second
-
-4. **Judge Quality Comparison** (`judgeQualityComparison`)
-   - Uses a judge model to evaluate response quality
-   - Scores both MLX and Ollama responses (0-100)
-   - Determines quality winner with reasoning
-
-5. **Compare Results** (`compareResults`)
-   - Calculates speed differences and tokens per second
-   - Determines which model is faster
-   - Displays both speed and quality comparison results
+2. **Run Complete Benchmark** (`runCompleteBenchmark`)
+   - For each iteration (1 to N):
+     - Tests MLX model with the prompt
+     - Tests Ollama model with the same prompt
+     - Judges the pair of responses immediately (avoids context overflow)
+     - Stores individual scores, times, and token rates
+   - After all iterations:
+     - Calculates average execution times
+     - Calculates average tokens per second
+     - Calculates average quality scores
+     - Counts wins for each model
+     - Displays comprehensive final summary
 
 ## Example Output
 
 ```
-=== Preparing LLM Benchmark ===
+========== Preparing LLM Benchmark ==========
 MLX Model (LM Studio): qwen3-4b-instruct-2507-mlx
-Ollama Model: hopephoto/Qwen3-4B-Instruct-2507_q8:latest
+Non-MLX Model (Ollama): hopephoto/Qwen3-4B-Instruct-2507_q8:latest
 Judge Model: openai/gpt-oss-20b
-Iterations: 100
+Iterations: 3
 Using default test prompt: Document:...
 
---- Testing MLX Model: 'qwen3-4b-instruct-2507-mlx' with 100 iterations ---
-Iteration 1/100... Iteration 2/100... Iteration 3/100... [continues through 100]
+--------- Iteration 1/3 ---------
 
---- Testing Ollama Model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest' with 100 iterations ---
-Iteration 1/100... Iteration 2/100... Iteration 3/100... [continues through 100]
+Testing MLX model: 'qwen3-4b-instruct-2507-mlx'...
 
---- Evaluating Quality - Using Model: openai/gpt-oss-20b ---
+Finished (17034ms, 79.08 tokens/sec).
 
-------------- Comparing Results -------------
-SPEED:
-Faster model: MLX
-Tokens per second difference: 30.28%
-Speed difference: 30.58%
+Testing Ollama model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest'...
 
-QUALITY: (Using openai/gpt-oss-20b as judge)
-MLX quality score: 88/100
-Ollama quality score: 80/100
-Quality winner: MLX
-Judge reasoning: Response A correctly calculates the winter energy reduction, provides a concise three‑sentence summary, and offers precise maintenance cost figures with uncertainty. While Response B miscalculates Q1 and over‑expands the summary, it correctly identifies battery degradation as a priority. Overall, MLX demonstrates higher factual accuracy and better organization.
-------------------------------------------------
+Finished (19026ms, 56.45 tokens/sec).
+
+Comparing quality of responses...
+
+Judgement Complete - Winner: MLX
+
+--------- Iteration 2/3 ---------
+
+Testing MLX model: 'qwen3-4b-instruct-2507-mlx'...
+
+Finished (15662ms, 78.66 tokens/sec).
+
+Testing Ollama model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest'...
+
+Finished (16753ms, 63.81 tokens/sec).
+
+Comparing quality of responses...
+
+Judgement Complete - Winner: Ollama
+
+--------- Iteration 3/3 ---------
+
+Testing MLX model: 'qwen3-4b-instruct-2507-mlx'...
+
+Finished (14479ms, 75.83 tokens/sec).
+
+Testing Ollama model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest'...
+
+Finished (16064ms, 66.11 tokens/sec).
+
+Comparing quality of responses...
+
+Judgement Complete - Winner: Ollama
+
+
+======================================================================
+FINAL BENCHMARK SUMMARY
+======================================================================
+
+[qwen3-4b-instruct-2507-mlx] (MLX) vs. [hopephoto/Qwen3-4B-Instruct-2507_q8:latest] (non-MLX)
+
+SPEED METRICS:
+  Faster Model: MLX (9.00% faster)
+  Average Time (MLX): 15725ms
+  Average Time (non-MLX): 17281ms
+  Average TPS (MLX): 77.86 tokens/sec
+  Average TPS (non-MLX): 62.12 tokens/sec
+
+QUALITY METRICS:
+  Best Quality: Ollama
+  Average Score (MLX): 71.67/100
+  Average Score (non-MLX): 80.00/100
+  Wins (MLX): 1
+  Wins (non-MLX): 2
+  Ties: 0
+
+======================================================================
 ```
 
 ## Configuration Options
@@ -144,9 +182,13 @@ benchmark:
   judge-model: openai/gpt-oss-20b  # Model used to evaluate quality
 ```
 
-**Iterations**: The benchmark runs each model multiple times (default: 100) and calculates average performance metrics. More iterations provide more reliable statistics but take longer to complete.
+**Iterations**: The benchmark runs each model multiple times (default: 100). For each iteration, both models generate a response to the same prompt, and the judge immediately evaluates the pair. This approach:
+- Prevents context window overflow by judging one pair at a time
+- Allows for per-iteration performance tracking
+- Calculates reliable average metrics across all iterations
+- More iterations provide more reliable statistics but take longer to complete
 
-**Judge Model**: An LLM that evaluates the quality of responses from both models, scoring them on accuracy, completeness, reasoning quality, and clarity.
+**Judge Model**: An LLM that evaluates the quality of responses from both models for each iteration, scoring them on accuracy, completeness, reasoning quality, and clarity. The judge assigns scores (0-100) and declares a winner for each iteration.
 
 ### Custom Test Prompt
 
@@ -182,18 +224,19 @@ The agent uses the Embabel Agent Framework with:
 
 ### Key Components
 
-- `BenchmarkAgent.kt`: Main agent logic with 5 actions (prepareBenchmark, testMlxModel, testOllamaModel, judgeQualityComparison, compareResults)
+- `BenchmarkAgent.kt`: Main agent logic with 2 actions (prepareBenchmark, runCompleteBenchmark)
 - `BenchmarkProperties.kt`: Configuration management (mlxModel, ollamaModel, judgeModel, iterations, defaultPrompt)
-- `BenchmarkResults.kt`: Data models (TestResult, ModelType, ComparisonResult, JudgeResult, TestConfiguration)
+- `BenchmarkResults.kt`: Data models (TestConfiguration, IterationData, JudgeResult, AggregatedBenchmarkResult)
 - `BenchmarkApplication.kt`: Spring Boot entry point
 
 ### Performance Metrics
 
-The agent tracks:
-- **Execution Time**: Average time per iteration (milliseconds)
-- **Tokens Per Second**: Estimated throughput based on response length
-- **Quality Scores**: 0-100 scores assigned by the judge model
-- **Speed Difference**: Percentage difference between model execution times
+The agent tracks for each iteration and calculates averages:
+- **Execution Time**: Individual and average time per iteration (milliseconds)
+- **Tokens Per Second**: Individual and average throughput based on response length
+- **Quality Scores**: Individual and average scores (0-100) assigned by the judge model
+- **Win Counts**: Number of times each model wins in quality judgments
+- **Speed Difference**: Percentage difference between average model execution times
 
 ### Extending the Agent
 

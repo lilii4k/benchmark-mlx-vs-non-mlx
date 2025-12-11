@@ -33,12 +33,41 @@ data class JudgeResult(
     val winner: String
 )
 
+data class IterationData(
+    val iterationNumber: Int,
+    val mlxResponse: String,
+    val mlxTimeMs: Long,
+    val mlxTokensPerSecond: Double,
+    val ollamaResponse: String,
+    val ollamaTimeMs: Long,
+    val ollamaTokensPerSecond: Double,
+    val judgeResult: JudgeResult
+)
+
 data class ComparisonResult(
     val mlxResult: TestResult,
     val ollamaResult: TestResult,
     val speedDifferencePercent: Double,
     val mlxFaster: Boolean,
     val qualityJudgment: JudgeResult? = null
+)
+
+data class AggregatedBenchmarkResult(
+    val prompt: String,
+    val mlxModelName: String,
+    val ollamaModelName: String,
+    val judgeModelName: String,
+    val totalIterations: Int,
+    val iterations: List<IterationData>,
+    val avgMlxTimeMs: Long,
+    val avgOllamaTimeMs: Long,
+    val avgMlxTokensPerSecond: Double,
+    val avgOllamaTokensPerSecond: Double,
+    val avgMlxQualityScore: Double,
+    val avgOllamaQualityScore: Double,
+    val mlxWins: Int,
+    val ollamaWins: Int,
+    val ties: Int
 )
 
 data class TestConfiguration(

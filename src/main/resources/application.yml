@@ -20,7 +20,7 @@ benchmark:
   default-prompt:
     - "Explain quantum computing in simple terms."
 
-  iterations: 100
+  iterations: 3
 
   timeout-seconds: 120
 
