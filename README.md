@@ -22,14 +22,14 @@ This agent automatically:
 ### 1. Install and Configure LM Studio
 
 1. Download [LM Studio](https://lmstudio.ai/)
-2. Load an MLX-optimized model (e.g., `qwen3-4b-instruct-2507-mlx`)
+2. Load an MLX-optimized model (e.g., `granite-4.0-h-tiny-mlx@4bit`)
 3. Start the local server (default: `http://localhost:1234`)
 4. Note the exact model name as shown in LM Studio for configuration
 
 ### 2. Install and Configure Ollama
 
 1. Install [Ollama](https://ollama.ai/)
-2. Pull a model: `ollama pull hopephoto/Qwen3-4B-Instruct-2507_q8:latest` (or your preferred model)
+2. Pull a model: `ollama pull granite4:tiny-h` (or your preferred model)
 3. Ensure Ollama is running (default: `http://localhost:11434`)
 
 ### 3. Configure the Application
@@ -38,8 +38,8 @@ Edit `src/main/resources/application.yml` to customize:
 
 ```yaml
 benchmark:
-  mlx-model: qwen3-4b-instruct-2507-mlx
-  ollama-model: hopephoto/Qwen3-4B-Instruct-2507_q8:latest
+  mlx-model: granite-4.0-h-tiny-mlx@4bit
+  ollama-model: granite4:tiny-h
   judge-model: openai/gpt-oss-20b  # Model used to evaluate response quality
   iterations: 100  # Number of test iterations per model
 ```
@@ -89,19 +89,19 @@ The benchmark agent follows this autonomous workflow:
 
 ```
 ========== Preparing LLM Benchmark ==========
-MLX Model (LM Studio): qwen3-4b-instruct-2507-mlx
-Non-MLX Model (Ollama): hopephoto/Qwen3-4B-Instruct-2507_q8:latest
+MLX Model (LM Studio): granite-4.0-h-tiny-mlx@4bit
+Non-MLX Model (Ollama): granite4:tiny-h
 Judge Model: openai/gpt-oss-20b
 Iterations: 3
 Using default test prompt: Document:...
 
 --------- Iteration 1/3 ---------
 
-Testing MLX model: 'qwen3-4b-instruct-2507-mlx'...
+Testing MLX model: 'granite-4.0-h-tiny-mlx@4bit'...
 
 Finished (17034ms, 79.08 tokens/sec).
 
-Testing Ollama model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest'...
+Testing Ollama model: 'granite4:tiny-h'...
 
 Finished (19026ms, 56.45 tokens/sec).
 
@@ -111,11 +111,11 @@ Judgement Complete - Winner: MLX
 
 --------- Iteration 2/3 ---------
 
-Testing MLX model: 'qwen3-4b-instruct-2507-mlx'...
+Testing MLX model: 'granite-4.0-h-tiny-mlx@4bit'...
 
 Finished (15662ms, 78.66 tokens/sec).
 
-Testing Ollama model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest'...
+Testing Ollama model: 'granite4:tiny-h'...
 
 Finished (16753ms, 63.81 tokens/sec).
 
@@ -125,11 +125,11 @@ Judgement Complete - Winner: Ollama
 
 --------- Iteration 3/3 ---------
 
-Testing MLX model: 'qwen3-4b-instruct-2507-mlx'...
+Testing MLX model: 'granite-4.0-h-tiny-mlx@4bit'...
 
 Finished (14479ms, 75.83 tokens/sec).
 
-Testing Ollama model: 'hopephoto/Qwen3-4B-Instruct-2507_q8:latest'...
+Testing Ollama model: 'granite4:tiny-h'...
 
 Finished (16064ms, 66.11 tokens/sec).
 
@@ -142,7 +142,7 @@ Judgement Complete - Winner: Ollama
 FINAL BENCHMARK SUMMARY
 ======================================================================
 
-[qwen3-4b-instruct-2507-mlx] (MLX) vs. [hopephoto/Qwen3-4B-Instruct-2507_q8:latest] (non-MLX)
+[granite-4.0-h-tiny-mlx@4bit] (MLX) vs. [granite4:tiny-h] (non-MLX)
 
 SPEED METRICS:
   Faster Model: MLX (9.00% faster)
