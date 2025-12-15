@@ -1,4 +1,4 @@
-package com.embabel.benchmark
+package com.incept5.benchmark
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan

@@ -12,7 +12,7 @@ embabel:
   agent:
     mode: shell
     scan-packages:
-      - com.embabel.benchmark
+      - com.incept5.benchmark
   models:
     default-llm: openai/gpt-oss-20b
 
@@ -32,7 +32,7 @@ benchmark:
 #logging:
 #  level:
 #    com.embabel: DEBUG
-#    com.embabel.benchmark: DEBUG
+#    com.incept5.benchmark: DEBUG
 #    org.springframework.ai: DEBUG
 #    org.springframework.web.client: DEBUG
 #    root: INFO

@@ -1,4 +1,4 @@
-package com.embabel.benchmark.model
+package com.incept5.benchmark.model
 
 data class TestResult(
     val modelName: String,

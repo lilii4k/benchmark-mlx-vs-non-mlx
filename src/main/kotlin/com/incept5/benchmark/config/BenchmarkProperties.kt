@@ -1,4 +1,4 @@
-package com.embabel.benchmark.config
+package com.incept5.benchmark.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
